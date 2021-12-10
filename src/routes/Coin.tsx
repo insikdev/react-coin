@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchTicker } from "../api";
 import Detail from "../components/Detail";
@@ -41,18 +41,14 @@ const Coin = () => {
     fetchTicker(id!)
   );
 
-  console.log(ticker);
-
-  if (!ticker) return null;
-
   return (
     <MainContainer>
       <header>
         <MainTitle>{state?.name ?? ticker?.name ?? "Not Found"}</MainTitle>
       </header>
-      {isLoading ? (
+      {isLoading || ticker?.error ? (
         <Loader />
-      ) : ticker?.error ? null : (
+      ) : (
         <>
           <InfoContainer>
             <img
@@ -88,11 +84,15 @@ const Coin = () => {
             </InfoText>
           </InfoContainer>
           <Detail
-            rank={ticker?.rank}
-            market_cap={ticker.quotes.KRW.market_cap}
-            total_supply={ticker.circulating_supply}
-            release_date={ticker.first_data_at}
+            rank={ticker?.rank!}
+            market_cap={ticker?.quotes.KRW.market_cap!}
+            total_supply={ticker?.circulating_supply!}
+            release_date={ticker?.first_data_at!}
           />
+
+          <Link to="chart">chart</Link>
+          <Link to="price">price</Link>
+          <Outlet />
         </>
       )}
     </MainContainer>

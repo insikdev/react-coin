@@ -11,9 +11,12 @@
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/styled-components": "^5.1.17",
+    "apexcharts": "^3.32.0",
     "gh-pages": "^3.2.3",
     "react": "^17.0.2",
+    "react-apexcharts": "^1.3.9",
     "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
     "react-query": "^3.34.0",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
@@ -48,5 +51,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://ZzicC12.github.io/react-coin"
+  "homepage": "https://ZzicC12.github.io/react-coin",
+  "devDependencies": {
+    "@types/react-helmet": "^6.1.4"
+  }
 }
