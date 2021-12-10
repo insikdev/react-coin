@@ -9,4 +9,8 @@ export default styled.createGlobalStyle`
   body {
     font-family: "Roboto Slab", serif;
   }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;

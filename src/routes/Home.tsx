@@ -1,28 +1,21 @@
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchAllCoins } from "../api";
+import Loader from "../components/Loader";
+import MainContainer from "../components/MainContainer";
+import MainTitle from "../components/MainTitle";
 
-interface ICoins {
+interface ITickers {
   id: string;
   name: string;
   symbol: string;
-  rank: number;
-  is_new: boolean;
-  is_active: boolean;
-  type: string;
+  quotes: {
+    KRW: {
+      price: number;
+    };
+  };
 }
-
-const MainContainer = styled.section`
-  width: 25%;
-  margin: auto;
-  text-align: center;
-`;
-
-const MainTitle = styled.h1`
-  font-weight: 600;
-  font-size: 50px;
-  margin-top: 20px;
-  color: ${(props) => props.theme.titleColor}; ;
-`;
 
 const SubTitle = styled.h3`
   font-size: 22px;
@@ -30,14 +23,22 @@ const SubTitle = styled.h3`
   margin: 10px 0px;
 `;
 
+const Ul = styled.ul`
+  display: flex;
+  flex-direction: column;
+`;
+
 const CoinContainer = styled.li`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 10px;
-  margin-bottom: 15px;
-  padding: 20px 6px;
+  padding: 0px 2px;
+  margin: 8px 0px;
   transition: background-color 0.3s ease-in, color 0.3s ease-in-out;
-  display: flex;
-  align-items: center;
+  a {
+    padding: 20px 6px;
+    display: flex;
+    align-items: center;
+  }
 
   &:hover {
     background-color: ${(props) => props.theme.hoverColor};
@@ -45,24 +46,24 @@ const CoinContainer = styled.li`
     cursor: pointer;
   }
   img {
-    margin: 0px 10px;
+    margin-right: 10px;
     width: 64px;
     height: 64px;
   }
   span {
     font-size: 22px;
     font-weight: bold;
+    width: fit-content;
   }
 `;
 
-const Home = () => {
-  const { isLoading, data: coins } = useQuery<ICoins[]>("coins", () =>
-    fetch("https://api.coinpaprika.com/v1/coins").then((res) => res.json())
-  );
+const Price = styled.span`
+  flex: 1;
+  text-align: end;
+`;
 
-  if (isLoading) {
-    return <span>Loading..</span>;
-  }
+const Home = () => {
+  const { isLoading, data } = useQuery<ITickers[]>("coins", fetchAllCoins);
 
   return (
     <MainContainer>
@@ -70,17 +71,36 @@ const Home = () => {
         <MainTitle>CRYPTO TRACKER </MainTitle>
         <SubTitle>using Coinpaprika API</SubTitle>
       </header>
-      <ul>
-        {coins?.slice(0, 100).map((coin) => (
-          <CoinContainer key={coin.id}>
-            <img
-              src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
-              alt={coin.symbol}
-            />
-            <span>{coin.name}</span>
-          </CoinContainer>
-        ))}
-      </ul>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Ul>
+          {data?.slice(0, 100).map((coin) => (
+            <CoinContainer key={coin.id}>
+              <Link
+                to={coin.id}
+                state={{
+                  name: coin.name,
+                }}
+              >
+                <img
+                  src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                  alt={coin.symbol}
+                />
+                <span>{coin.name}</span>
+                <Price>
+                  {coin.quotes.KRW.price < 1
+                    ? coin.quotes.KRW.price.toFixed(2)
+                    : Math.floor(coin.quotes.KRW.price).toLocaleString(
+                        "ko-KR"
+                      )}{" "}
+                  KRW
+                </Price>
+              </Link>
+            </CoinContainer>
+          ))}
+        </Ul>
+      )}
     </MainContainer>
   );
 };
