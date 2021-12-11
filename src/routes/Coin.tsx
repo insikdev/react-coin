@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import {
   Link,
@@ -64,6 +65,9 @@ const Coin = () => {
 
   return (
     <MainContainer>
+      <Helmet>
+        <title>{state?.name ?? ticker?.name ?? "Not Found"}</title>
+      </Helmet>
       <header>
         <MainTitle>{state?.name ?? ticker?.name ?? "Not Found"}</MainTitle>
       </header>

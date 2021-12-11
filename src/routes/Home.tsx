@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -67,6 +68,9 @@ const Home = () => {
 
   return (
     <MainContainer>
+      <Helmet>
+        <title>CRYPTO TRACKER</title>
+      </Helmet>
       <header>
         <MainTitle>CRYPTO TRACKER </MainTitle>
         <SubTitle>
