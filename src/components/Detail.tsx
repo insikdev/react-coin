@@ -22,6 +22,7 @@ const ItemList = styled.li`
 const Label = styled.span`
   width: 150px;
   text-align: start;
+  font-weight: bold;
 `;
 
 const Detail: React.FC<IProps> = ({

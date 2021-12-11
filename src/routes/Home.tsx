@@ -69,7 +69,15 @@ const Home = () => {
     <MainContainer>
       <header>
         <MainTitle>CRYPTO TRACKER </MainTitle>
-        <SubTitle>using Coinpaprika API</SubTitle>
+        <SubTitle>
+          <a
+            href="https://api.coinpaprika.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            using Coinpaprika API
+          </a>
+        </SubTitle>
       </header>
       {isLoading ? (
         <Loader />
@@ -78,7 +86,7 @@ const Home = () => {
           {data?.slice(0, 100).map((coin) => (
             <CoinContainer key={coin.id}>
               <Link
-                to={coin.id}
+                to={`${coin.id}/chart`}
                 state={{
                   name: coin.name,
                 }}
@@ -91,10 +99,8 @@ const Home = () => {
                 <Price>
                   {coin.quotes.KRW.price < 1
                     ? coin.quotes.KRW.price.toFixed(2)
-                    : Math.floor(coin.quotes.KRW.price).toLocaleString(
-                        "ko-KR"
-                      )}{" "}
-                  KRW
+                    : Math.floor(coin.quotes.KRW.price).toLocaleString("ko-KR")}
+                  {" KRW"}
                 </Price>
               </Link>
             </CoinContainer>

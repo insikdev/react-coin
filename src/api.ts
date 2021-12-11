@@ -8,7 +8,7 @@ export const fetchTicker = (id: string) =>
 
 // export const fetchInfo = (id: string) =>
 //   fetch(`${BASE_URL}/coins/${id}`).then((res) => res.json());
-export const fetchHistory = (id: string) => {
+export const fetchHistory = async (id: string) => {
   const endDate = Math.floor(Date.now() / 1000);
   const startDate = endDate - 60 * 60 * 24 * 7 * 2;
   return fetch(

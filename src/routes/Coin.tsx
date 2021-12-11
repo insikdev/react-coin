@@ -1,5 +1,11 @@
 import { useQuery } from "react-query";
-import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useMatch,
+  useParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import { fetchTicker } from "../api";
 import Detail from "../components/Detail";
@@ -33,9 +39,24 @@ const InfoText = styled.div`
   flex: 1;
 `;
 
+const Tab = styled.nav`
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+`;
+
+const TabChildren = styled(Link)`
+  background-color: ${(props) => props.theme.titleColor};
+  padding: 10px 50px;
+  border-radius: 10px;
+  color: white;
+`;
+
 const Coin = () => {
   const { state } = useLocation();
   const { id } = useParams();
+  const onChart = useMatch("/:id/chart");
+  const onPrice = useMatch("/:id/price");
 
   const { isLoading, data: ticker } = useQuery<ITicker>([id, "ticker"], () =>
     fetchTicker(id!)
@@ -90,8 +111,20 @@ const Coin = () => {
             release_date={ticker?.first_data_at!}
           />
 
-          <Link to="chart">chart</Link>
-          <Link to="price">price</Link>
+          <Tab>
+            <TabChildren
+              to="chart"
+              style={{ fontWeight: onChart ? "bold" : "normal" }}
+            >
+              차트
+            </TabChildren>
+            <TabChildren
+              to="price"
+              style={{ fontWeight: onPrice ? "bold" : "normal" }}
+            >
+              시세
+            </TabChildren>
+          </Tab>
           <Outlet />
         </>
       )}
