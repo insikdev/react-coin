@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/react-coin/static/js/main.e00a1907.chunk.js",
-    "main.js.map": "/react-coin/static/js/main.e00a1907.chunk.js.map",
+    "main.js": "/react-coin/static/js/main.818c3110.chunk.js",
+    "main.js.map": "/react-coin/static/js/main.818c3110.chunk.js.map",
     "runtime-main.js": "/react-coin/static/js/runtime-main.f0e51a18.js",
     "runtime-main.js.map": "/react-coin/static/js/runtime-main.f0e51a18.js.map",
-    "static/js/2.e9344a4a.chunk.js": "/react-coin/static/js/2.e9344a4a.chunk.js",
-    "static/js/2.e9344a4a.chunk.js.map": "/react-coin/static/js/2.e9344a4a.chunk.js.map",
+    "static/js/2.389aca0e.chunk.js": "/react-coin/static/js/2.389aca0e.chunk.js",
+    "static/js/2.389aca0e.chunk.js.map": "/react-coin/static/js/2.389aca0e.chunk.js.map",
     "index.html": "/react-coin/index.html",
-    "static/js/2.e9344a4a.chunk.js.LICENSE.txt": "/react-coin/static/js/2.e9344a4a.chunk.js.LICENSE.txt"
+    "static/js/2.389aca0e.chunk.js.LICENSE.txt": "/react-coin/static/js/2.389aca0e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f0e51a18.js",
-    "static/js/2.e9344a4a.chunk.js",
-    "static/js/main.e00a1907.chunk.js"
+    "static/js/2.389aca0e.chunk.js",
+    "static/js/main.818c3110.chunk.js"
   ]
 }
