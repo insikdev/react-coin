@@ -2,7 +2,7 @@
 
 ## Overview
 
-- [링크](https://zzicc12.github.io/react-coin/){:target="\_blank"}
+- <a href="https://zzicc12.github.io/react-coin/" target="_blank">링크</a>
 - Coinpaprika API 사용
 - 추가 예정
   - 다크모드
