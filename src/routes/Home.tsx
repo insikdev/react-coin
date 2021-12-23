@@ -2,21 +2,10 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { fetchAllCoins } from "../api";
+import { fetchAllCoins, fetchExchangeRate, IExchange, ITickers } from "../api";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
-
-interface ITickers {
-  id: string;
-  name: string;
-  symbol: string;
-  quotes: {
-    KRW: {
-      price: number;
-    };
-  };
-}
 
 const SubTitle = styled.h3`
   font-size: 22px;
@@ -30,41 +19,74 @@ const Ul = styled.ul`
 `;
 
 const CoinContainer = styled.li`
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border-radius: 10px;
-  padding: 0px 2px;
-  margin: 8px 0px;
+  border-bottom: 1px solid #ecf0f1;
+  padding: 0px 16px;
   transition: background-color 0.3s ease-in, color 0.3s ease-in-out;
   a {
-    padding: 20px 6px;
+    padding: 20px 0px;
     display: flex;
     align-items: center;
+    div {
+      display: flex;
+      align-items: center;
+    }
+    div:first-child {
+      width: 40%;
+    }
+    div:nth-child(n + 2) {
+      width: 15%;
+    }
   }
-
   &:hover {
     background-color: ${(props) => props.theme.hoverColor};
-    color: white;
-    cursor: pointer;
   }
-  img {
-    margin-right: 10px;
-    width: 64px;
-    height: 64px;
+`;
+
+const CoinSymbol = styled.span`
+  margin: 0px 15px;
+  font-size: 22px;
+  font-weight: bold;
+`;
+
+const CoinName = styled.span`
+  font-size: 16px;
+  color: #7f8c8d;
+`;
+
+const Icon = styled.img`
+  width: 32px;
+  height: 32px;
+`;
+
+const Tab = styled.div`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 12px 16px;
+  background-color: #ecf0f1;
+  div {
+    text-align: left;
   }
-  span {
-    font-size: 22px;
-    font-weight: bold;
-    width: fit-content;
+  div:first-child {
+    width: 40%;
+  }
+  div:nth-child(n + 2) {
+    width: 15%;
   }
 `;
 
 const Price = styled.span`
-  flex: 1;
-  text-align: end;
+  font-size: 24px;
+`;
+
+const Change24 = styled.span<{ isUp: boolean }>`
+  font-size: 24px;
+  color: ${(props) => (props.isUp ? props.theme.upward : props.theme.downward)};
 `;
 
 const Home = () => {
   const { isLoading, data } = useQuery<ITickers[]>("coins", fetchAllCoins);
+  const { data: exchange } = useQuery<IExchange>("exchange", fetchExchangeRate);
 
   return (
     <MainContainer>
@@ -83,6 +105,13 @@ const Home = () => {
           </a>
         </SubTitle>
       </header>
+      <Tab>
+        <div>Name</div>
+        <div>Price</div>
+        <div>24h Change</div>
+        <div>24h Volume</div>
+        <div>Market Cap</div>
+      </Tab>
       {isLoading ? (
         <Loader />
       ) : (
@@ -95,17 +124,29 @@ const Home = () => {
                   name: coin.name,
                 }}
               >
-                <img
-                  src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
-                  alt={coin.symbol}
-                />
-                <span>{coin.name}</span>
-                <Price>
-                  {coin.quotes.KRW.price < 1
-                    ? coin.quotes.KRW.price.toFixed(2)
-                    : Math.floor(coin.quotes.KRW.price).toLocaleString("ko-KR")}
-                  {" KRW"}
-                </Price>
+                <div>
+                  <Icon
+                    src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                    alt={coin.symbol}
+                  />
+                  <CoinSymbol>{coin.symbol}</CoinSymbol>
+                  <CoinName>{coin.name}</CoinName>
+                </div>
+                <div>
+                  <Price>${coin.quotes.USD.price.toFixed(2)}</Price>
+                </div>
+                <div>
+                  <Change24 isUp={coin.quotes.USD.percent_change_24h > 0}>
+                    {coin.quotes.USD.percent_change_24h > 0 && "+"}
+                    {coin.quotes.USD.percent_change_24h}%
+                  </Change24>
+                </div>
+                <div>
+                  <span>${coin.quotes.USD.volume_24h}</span>
+                </div>
+                <div>
+                  <span>${coin.quotes.USD.market_cap}</span>
+                </div>
               </Link>
             </CoinContainer>
           ))}

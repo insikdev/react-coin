@@ -6,5 +6,7 @@ declare module "styled-components" {
   export interface DefaultTheme {
     hoverColor: string;
     titleColor: string;
+    upward: string;
+    downward: string;
   }
 }

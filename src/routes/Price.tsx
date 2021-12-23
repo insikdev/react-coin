@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { fetchCurrentExchangeRate, fetchHistory } from "../api";
+import { fetchExchangeRate, fetchHistory } from "../api";
 import Loader from "../components/Loader";
 import { IHistory, IRate } from "./Chart";
 
@@ -25,7 +25,7 @@ const Price = () => {
 
   const { isLoading: rateLoading, data: currentRate } = useQuery<IRate>(
     "rate",
-    fetchCurrentExchangeRate
+    fetchExchangeRate
   );
   if (historyLoading || rateLoading || !data) return <Loader />;
 

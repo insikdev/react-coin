@@ -2,7 +2,7 @@
 
 ## Overview
 
-- <a href="https://zzicc12.github.io/react-coin/" target="_blank">링크</a>
+- [링크](https://zzicc12.github.io/react-coin/)
 - Coinpaprika API 사용
 - 추가 예정
   - 다크모드
@@ -11,7 +11,7 @@
 ## Features
 
 - `/`
-  - 시가총액 상위 100위 암호화폐 정보 및 가격 표시
+  - 시가총액 상위 100위 암호화폐 정보 및 현재 가격 표시
 - `/:id`
   - 암호화폐의 ticker 및 시가총액 정보를 표시
 - `/:id/chart`

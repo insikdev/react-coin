@@ -1,7 +1,7 @@
 import ApexCharts from "react-apexcharts";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { fetchCurrentExchangeRate, fetchHistory } from "../api";
+import { fetchExchangeRate, fetchHistory } from "../api";
 import Loader from "../components/Loader";
 
 export interface IHistory {
@@ -28,7 +28,7 @@ const Chart = () => {
 
   const { isLoading: rateLoading, data: currentRate } = useQuery<IRate>(
     "rate",
-    fetchCurrentExchangeRate
+    fetchExchangeRate
   );
 
   if (historyLoading || rateLoading || !data) return <Loader />;
