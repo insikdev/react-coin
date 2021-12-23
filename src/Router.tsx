@@ -4,10 +4,12 @@ import Coin from "./routes/Coin";
 import Home from "./routes/Home";
 import Chart from "./routes/Chart";
 import Price from "./routes/Price";
+import Nav from "./components/Nav";
 
 const Router = () => {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:id" element={<Coin />}>

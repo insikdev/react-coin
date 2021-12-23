@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
@@ -13,19 +14,31 @@ import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
 
-const SubTitle = styled.h3`
-  font-size: 22px;
-  color: gray;
-  margin: 10px 0px;
-`;
-
 const Ul = styled.ul`
   display: flex;
   flex-direction: column;
 `;
 
+const Tab = styled.div`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 12px 16px;
+  background-color: ${(props) => props.theme.hoverColor};
+  div {
+    text-align: left;
+  }
+  div:first-child {
+    width: 30%;
+  }
+  div:nth-child(n + 2) {
+    width: 17.5%;
+  }
+`;
+
 const CoinContainer = styled.li`
-  border-bottom: 1px solid #ecf0f1;
+  border-bottom: 1px solid;
+  border-bottom-color: ${(props) => props.theme.hoverColor};
   padding: 0px 16px;
   transition: background-color 0.3s ease-in, color 0.3s ease-in-out;
   a {
@@ -38,10 +51,10 @@ const CoinContainer = styled.li`
       font-size: 22px;
     }
     div:first-child {
-      width: 40%;
+      width: 30%;
     }
     div:nth-child(n + 2) {
-      width: 15%;
+      width: 17.5%;
     }
   }
   &:hover {
@@ -65,28 +78,12 @@ const Icon = styled.img`
   height: 32px;
 `;
 
-const Tab = styled.div`
-  display: flex;
-  align-items: center;
-  height: 40px;
-  padding: 12px 16px;
-  background-color: #ecf0f1;
-  div {
-    text-align: left;
-  }
-  div:first-child {
-    width: 40%;
-  }
-  div:nth-child(n + 2) {
-    width: 15%;
-  }
-`;
-
 const Change24 = styled.span<{ isUp: boolean }>`
   color: ${(props) => (props.isUp ? props.theme.upward : props.theme.downward)};
 `;
 
 const Home = () => {
+  const [page, setPage] = useState(1);
   const { isLoading, data } = useQuery<ITickers[]>("coins", fetchAllCoins);
   const { data: exchange } = useQuery<IExchange>("exchange", fetchExchangeRate);
 
@@ -96,16 +93,7 @@ const Home = () => {
         <title>CRYPTO TRACKER</title>
       </Helmet>
       <header>
-        <MainTitle>CRYPTO TRACKER </MainTitle>
-        <SubTitle>
-          <a
-            href="https://api.coinpaprika.com/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            using Coinpaprika API
-          </a>
-        </SubTitle>
+        <MainTitle>Markets</MainTitle>
       </header>
       <Tab>
         <div>Name</div>
@@ -118,7 +106,7 @@ const Home = () => {
         <Loader />
       ) : (
         <Ul>
-          {data?.slice(0, 100).map((coin) => (
+          {data?.slice(20 * (page - 1), 20 * page).map((coin) => (
             <CoinContainer key={coin.id}>
               <Link
                 to={`${coin.id}/chart`}
@@ -154,6 +142,11 @@ const Home = () => {
           ))}
         </Ul>
       )}
+      {page > 1 && (
+        <button onClick={() => setPage((prev) => prev - 1)}>prev</button>
+      )}
+
+      <button onClick={() => setPage((prev) => prev + 1)}>next</button>
     </MainContainer>
   );
 };

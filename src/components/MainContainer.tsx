@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
 const Container = styled.main`
-  width: 1200px;
+  width: 80%;
   margin: 0 auto;
   text-align: center;
-  padding: 10px 20px 0px 20px;
-  min-height: 100vh;
-  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
 `;
 
 const MainContainer: React.FC = ({ children }) => (
