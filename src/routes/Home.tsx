@@ -2,7 +2,13 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { fetchAllCoins, fetchExchangeRate, IExchange, ITickers } from "../api";
+import {
+  fetchAllCoins,
+  fetchExchangeRate,
+  IExchange,
+  ITickers,
+  convertToMillion,
+} from "../api";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
@@ -29,6 +35,7 @@ const CoinContainer = styled.li`
     div {
       display: flex;
       align-items: center;
+      font-size: 22px;
     }
     div:first-child {
       width: 40%;
@@ -75,12 +82,7 @@ const Tab = styled.div`
   }
 `;
 
-const Price = styled.span`
-  font-size: 24px;
-`;
-
 const Change24 = styled.span<{ isUp: boolean }>`
-  font-size: 24px;
   color: ${(props) => (props.isUp ? props.theme.upward : props.theme.downward)};
 `;
 
@@ -133,7 +135,7 @@ const Home = () => {
                   <CoinName>{coin.name}</CoinName>
                 </div>
                 <div>
-                  <Price>${coin.quotes.USD.price.toFixed(2)}</Price>
+                  <span>${coin.quotes.USD.price.toFixed(2)}</span>
                 </div>
                 <div>
                   <Change24 isUp={coin.quotes.USD.percent_change_24h > 0}>
@@ -142,10 +144,10 @@ const Home = () => {
                   </Change24>
                 </div>
                 <div>
-                  <span>${coin.quotes.USD.volume_24h}</span>
+                  <span>{convertToMillion(coin.quotes.USD.volume_24h)}</span>
                 </div>
                 <div>
-                  <span>${coin.quotes.USD.market_cap}</span>
+                  <span>${convertToMillion(coin.quotes.USD.market_cap)}</span>
                 </div>
               </Link>
             </CoinContainer>

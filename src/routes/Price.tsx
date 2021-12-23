@@ -30,7 +30,7 @@ const Price = () => {
   if (historyLoading || rateLoading || !data) return <Loader />;
 
   return (
-    <section style={{ padding: "0px 20px" }}>
+    <section style={{ padding: "0px 20px", width: "50%", margin: "auto" }}>
       <Tab>
         <div style={{ width: "33%", textAlign: "start" }}>일자</div>
         <div style={{ width: "33%", textAlign: "start" }}>종가(KRW)</div>

@@ -35,6 +35,7 @@ const Chart = () => {
 
   return (
     <ApexCharts
+      style={{ width: "50%", margin: "auto" }}
       type="candlestick"
       options={{
         chart: {
