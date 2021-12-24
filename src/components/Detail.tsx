@@ -12,6 +12,7 @@ const ItemContainer = styled.ul`
   margin: 20px 0px;
   display: flex;
   flex-direction: column;
+  width: 40%;
 `;
 
 const ItemList = styled.li`

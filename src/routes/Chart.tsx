@@ -1,23 +1,8 @@
 import ApexCharts from "react-apexcharts";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { fetchExchangeRate, fetchHistory } from "../api";
+import { fetchHistory } from "../api";
 import Loader from "../components/Loader";
-
-export interface IHistory {
-  time_open: Date;
-  time_close: Date;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-}
-
-export interface IRate {
-  quotes: {
-    KRW: { price: number };
-  };
-}
 
 const Chart = () => {
   const { id } = useParams();
@@ -26,16 +11,10 @@ const Chart = () => {
     () => fetchHistory(id!)
   );
 
-  const { isLoading: rateLoading, data: currentRate } = useQuery<IRate>(
-    "rate",
-    fetchExchangeRate
-  );
-
-  if (historyLoading || rateLoading || !data) return <Loader />;
+  if (historyLoading) return <Loader />;
 
   return (
     <ApexCharts
-      style={{ width: "50%", margin: "auto" }}
       type="candlestick"
       options={{
         chart: {
@@ -50,7 +29,7 @@ const Chart = () => {
         yaxis: {
           tooltip: { enabled: true },
           labels: {
-            formatter: (money) => money.toLocaleString("ko-KR") + "원",
+            formatter: (money) => money.toLocaleString("ko-KR"),
           },
         },
         plotOptions: {
@@ -67,10 +46,10 @@ const Chart = () => {
           data: data?.map((coin) => ({
             x: coin.time_open,
             y: [
-              Math.floor(coin.open * currentRate?.quotes.KRW.price!),
-              Math.floor(coin.high * currentRate?.quotes.KRW.price!),
-              Math.floor(coin.low * currentRate?.quotes.KRW.price!),
-              Math.floor(coin.close * currentRate?.quotes.KRW.price!),
+              coin.open.toFixed(2),
+              coin.high.toFixed(2),
+              coin.low.toFixed(2),
+              coin.close.toFixed(2),
             ],
           })),
         },

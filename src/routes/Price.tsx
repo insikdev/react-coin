@@ -1,9 +1,8 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { fetchExchangeRate, fetchHistory } from "../api";
+import { fetchHistory } from "../api";
 import Loader from "../components/Loader";
-import { IHistory, IRate } from "./Chart";
 
 const Tab = styled.div`
   display: flex;
@@ -23,21 +22,17 @@ const Price = () => {
     () => fetchHistory(id!)
   );
 
-  const { isLoading: rateLoading, data: currentRate } = useQuery<IRate>(
-    "rate",
-    fetchExchangeRate
-  );
-  if (historyLoading || rateLoading || !data) return <Loader />;
+  if (historyLoading) return <Loader />;
 
   return (
-    <section style={{ padding: "0px 20px", width: "50%", margin: "auto" }}>
+    <section style={{ padding: "0px 20px", width: "100%" }}>
       <Tab>
-        <div style={{ width: "33%", textAlign: "start" }}>일자</div>
-        <div style={{ width: "33%", textAlign: "start" }}>종가(KRW)</div>
-        <div style={{ width: "33%", textAlign: "end" }}>전일대비</div>
+        <div style={{ width: "33%", textAlign: "center" }}>일자</div>
+        <div style={{ width: "33%", textAlign: "center" }}>종가</div>
+        <div style={{ width: "33%", textAlign: "center" }}>전일대비</div>
       </Tab>
       <ul style={{ transform: "rotate(180deg)" }}>
-        {data.map((coin, index) => {
+        {data?.map((coin, index) => {
           let calculate = 0;
           if (index !== 0 && index < data.length) {
             const today = coin.close;
@@ -47,7 +42,11 @@ const Price = () => {
           return (
             <List key={index}>
               <div
-                style={{ display: "flex", width: "33%", textAlign: "center" }}
+                style={{
+                  display: "flex",
+                  width: "33%",
+                  justifyContent: "center",
+                }}
               >
                 <span>{new Date(coin.time_open).getMonth() + 1}</span>
                 <span>.</span>
@@ -57,15 +56,16 @@ const Price = () => {
                     : new Date(coin.time_open).getDate()}
                 </span>
               </div>
-              <span style={{ width: "33%", textAlign: "start" }}>
-                {Math.floor(
-                  coin.close * currentRate?.quotes.KRW.price!
-                ).toLocaleString("ko-KR")}
+              <span style={{ width: "33%", textAlign: "center" }}>
+                {coin.close.toLocaleString("ko-KR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </span>
               <span
                 style={{
                   width: "33%",
-                  textAlign: "end",
+                  textAlign: "center",
                   color:
                     calculate === 0 ? "black" : calculate > 0 ? "red" : "blue",
                 }}

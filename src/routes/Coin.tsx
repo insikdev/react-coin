@@ -8,36 +8,37 @@ import {
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
-import { fetchTicker } from "../api";
+import { fetchTicker, fetchToday } from "../api";
 import Detail from "../components/Detail";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
 
-interface ITicker {
-  name: string;
-  symbol: string;
-  rank: number;
-  circulating_supply: number;
-  first_data_at: string;
-  quotes: {
-    KRW: {
-      price: number;
-      percent_change_24h: number;
-      market_cap: number;
-    };
-  };
-  error?: string;
-}
-
-const InfoContainer = styled.section`
-  margin-top: 10px;
+const SectionInfo = styled.section`
+  background-color: ${(props) => props.theme.hoverColor};
+  border-radius: 2px;
+  margin-bottom: 50px;
+  padding: 20px 0px;
+  width: 100%;
   display: flex;
   align-items: center;
-`;
-
-const InfoText = styled.div`
-  flex: 1;
+  justify-content: space-around;
+  div {
+    display: flex;
+    flex-direction: column;
+    span.title {
+      font-size: 30px;
+      font-weight: bold;
+    }
+    span.label {
+      color: gray;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    span.text {
+      font-size: 26px;
+    }
+  }
 `;
 
 const Tab = styled.nav`
@@ -48,9 +49,18 @@ const Tab = styled.nav`
 
 const TabChildren = styled(Link)`
   background-color: ${(props) => props.theme.titleColor};
-  padding: 10px 50px;
+  padding: 10px 60px;
   border-radius: 10px;
   color: white;
+`;
+
+const SectionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const SectionColumn = styled.section`
+  width: 40%;
 `;
 
 const Coin = () => {
@@ -62,6 +72,9 @@ const Coin = () => {
   const { isLoading, data: ticker } = useQuery<ITicker>([id, "ticker"], () =>
     fetchTicker(id!)
   );
+  const { data: today } = useQuery<IToday[]>([id, "today"], () =>
+    fetchToday(id!)
+  );
 
   return (
     <MainContainer>
@@ -71,65 +84,75 @@ const Coin = () => {
       <header>
         <MainTitle>{state?.name ?? ticker?.name ?? "Not Found"}</MainTitle>
       </header>
-      {isLoading || ticker?.error ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <>
-          <InfoContainer>
-            <img
-              src={`https://cryptoicon-api.vercel.app/api/icon/${ticker?.symbol.toLowerCase()}`}
-              alt={ticker?.symbol}
-              style={{ width: 80 }}
-            />
-            <InfoText>
-              <div style={{ fontSize: 20, color: "gray" }}>
-                {ticker?.symbol}/KRW
-              </div>
-              <div>
-                <div style={{ fontSize: 32, margin: "10px 0px" }}>
-                  {ticker?.quotes.KRW.price! < 1
-                    ? ticker?.quotes.KRW.price.toFixed(2)
-                    : Math.floor(ticker?.quotes.KRW.price!).toLocaleString(
-                        "ko-KR"
-                      )}
-                  <span
-                    style={{
-                      fontSize: 24,
-                      color:
-                        ticker?.quotes?.KRW?.percent_change_24h! >= 0
-                          ? "red"
-                          : "blue",
-                    }}
-                  >
-                    {" "}
-                    {ticker?.quotes.KRW.percent_change_24h}%
-                  </span>
-                </div>
-              </div>
-            </InfoText>
-          </InfoContainer>
-          <Detail
-            rank={ticker?.rank!}
-            market_cap={ticker?.quotes.KRW.market_cap!}
-            total_supply={ticker?.circulating_supply!}
-            release_date={ticker?.first_data_at!}
-          />
-
-          <Tab>
-            <TabChildren
-              to="chart"
-              style={{ fontWeight: onChart ? "bold" : "normal" }}
-            >
-              차트
-            </TabChildren>
-            <TabChildren
-              to="price"
-              style={{ fontWeight: onPrice ? "bold" : "normal" }}
-            >
-              시세
-            </TabChildren>
-          </Tab>
-          <Outlet />
+          <SectionInfo>
+            <div>
+              <span className="title">{ticker?.symbol}/USDT</span>
+            </div>
+            <div>
+              <span className="label">Price</span>
+              <span className="text">
+                ${ticker?.quotes.USD.price.toFixed(2)}
+              </span>
+            </div>
+            <div>
+              <span className="label">24h Change</span>
+              <span
+                className="text"
+                style={{
+                  color:
+                    ticker?.quotes.USD.percent_change_24h! > 0 ? "red" : "blue",
+                }}
+              >
+                {ticker?.quotes.USD.percent_change_24h! > 0 ? "▲" : "▼"}
+                {Math.abs(
+                  (ticker?.quotes.USD.price! *
+                    ticker?.quotes.USD.percent_change_24h!) /
+                    100
+                ).toFixed(2)}{" "}
+                {ticker?.quotes.USD.percent_change_24h! > 0 ? "+" : null}
+                {ticker?.quotes.USD.percent_change_24h}%
+              </span>
+            </div>
+            <div>
+              <span className="label">Today High</span>
+              <span className="text">${today && today[0].high.toFixed(2)}</span>
+            </div>
+            <div>
+              <span className="label">Today Low</span>
+              <span className="text">${today && today[0].low.toFixed(2)}</span>
+            </div>
+          </SectionInfo>
+          <SectionContainer>
+            <SectionColumn>
+              <Tab>
+                <TabChildren
+                  to="chart"
+                  style={{ fontWeight: onChart ? "bold" : "normal" }}
+                >
+                  Chart
+                </TabChildren>
+                <TabChildren
+                  to="price"
+                  style={{ fontWeight: onPrice ? "bold" : "normal" }}
+                >
+                  Price
+                </TabChildren>
+              </Tab>
+              <Outlet />
+            </SectionColumn>
+            <SectionColumn>
+              <Detail
+                rank={ticker?.rank!}
+                market_cap={ticker?.quotes.USD.market_cap!}
+                total_supply={ticker?.circulating_supply!}
+                release_date={ticker?.first_data_at!}
+              />
+            </SectionColumn>
+          </SectionContainer>
         </>
       )}
     </MainContainer>

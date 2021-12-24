@@ -3,16 +3,11 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {
-  fetchAllCoins,
-  fetchExchangeRate,
-  IExchange,
-  ITickers,
-  convertToMillion,
-} from "../api";
+import { fetchAllCoins, fetchExchangeRate } from "../api";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
+import { convertToMillion } from "../utils";
 
 const Ul = styled.ul`
   display: flex;
@@ -85,7 +80,7 @@ const Change24 = styled.span<{ isUp: boolean }>`
 const Home = () => {
   const [page, setPage] = useState(1);
   const { isLoading, data } = useQuery<ITickers[]>("coins", fetchAllCoins);
-  const { data: exchange } = useQuery<IExchange>("exchange", fetchExchangeRate);
+  // const { data: exchange } = useQuery<IExchange>("exchange", fetchExchangeRate);
 
   return (
     <MainContainer>
@@ -142,11 +137,14 @@ const Home = () => {
           ))}
         </Ul>
       )}
-      {page > 1 && (
-        <button onClick={() => setPage((prev) => prev - 1)}>prev</button>
-      )}
-
-      <button onClick={() => setPage((prev) => prev + 1)}>next</button>
+      <div>
+        {page > 1 ? (
+          <button onClick={() => setPage((prev) => prev - 1)}>prev</button>
+        ) : null}
+        {page < 100 ? (
+          <button onClick={() => setPage((prev) => prev + 1)}>next</button>
+        ) : null}
+      </div>
     </MainContainer>
   );
 };
