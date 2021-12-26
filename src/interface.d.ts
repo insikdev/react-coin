@@ -1,4 +1,4 @@
-interface ITickerById {
+interface ITicker {
   id: string;
   name: string;
   symbol: string;
@@ -36,21 +36,6 @@ interface Usd {
   percent_from_price_ath: number;
 }
 
-interface IExchange {
-  quotes: {
-    KRW: {
-      price: number;
-    };
-  };
-}
-
-interface IToday {
-  high: number;
-  low: number;
-  close: number;
-  open: number;
-}
-
 interface IHistory {
   time_open: Date;
   time_close: Date;
@@ -58,4 +43,12 @@ interface IHistory {
   high: number;
   low: number;
   close: number;
+}
+
+interface IExchange {
+  quotes: {
+    KRW: {
+      price: number;
+    };
+  };
 }

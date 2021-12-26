@@ -8,39 +8,13 @@ import {
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
-import { fetchTicker, fetchToday } from "../api";
+import { fetchTickerById } from "../api";
 import Detail from "../components/Detail";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
 import TabMenu from "../components/TabMenu";
-
-const SectionInfo = styled.section`
-  background-color: ${(props) => props.theme.hoverColor};
-  border-radius: 2px;
-  margin-bottom: 50px;
-  padding: 20px 0px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  div {
-    display: flex;
-    flex-direction: column;
-    span.title {
-      font-size: 30px;
-      font-weight: bold;
-    }
-    span.label {
-      color: gray;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    span.text {
-      font-size: 26px;
-    }
-  }
-`;
+import Info from "../components/Info";
 
 const Tab = styled.nav`
   display: flex;
@@ -62,84 +36,37 @@ const Coin = () => {
   const onChart = useMatch("/:id/chart");
   const onPrice = useMatch("/:id/price");
 
-  const { isLoading, data: ticker } = useQuery<ITickerById>(
-    [id, "ticker"],
-    () => fetchTicker(id!)
-  );
-  const { data: today } = useQuery<IToday[]>([id, "today"], () =>
-    fetchToday(id!)
+  const { isLoading, data } = useQuery<ITicker>([id, "ticker"], () =>
+    fetchTickerById(id!)
   );
 
   return (
     <MainContainer>
       <Helmet>
-        <title>{state?.name ?? ticker?.name ?? "Not Found"}</title>
+        <title>{state?.name ?? data?.name ?? "Not Found"}</title>
       </Helmet>
-      <header>
-        <MainTitle>{state?.name ?? ticker?.name ?? "Not Found"}</MainTitle>
-      </header>
-      {isLoading || !ticker ? (
+
+      <MainTitle>{state?.name ?? data?.name ?? "Not Found"}</MainTitle>
+
+      {isLoading || !data ? (
         <Loader />
       ) : (
         <>
-          <SectionInfo>
-            <div>
-              <span className="title">{ticker?.symbol}/USDT</span>
-            </div>
-            <div>
-              <span className="label">Price</span>
-              <span className="text">
-                ${ticker?.quotes.USD.price.toFixed(2)}
-              </span>
-            </div>
-            <div>
-              <span className="label">24h Change</span>
-              <span
-                className="text"
-                style={{
-                  color:
-                    ticker?.quotes.USD.percent_change_24h! > 0 ? "red" : "blue",
-                }}
-              >
-                {ticker?.quotes.USD.percent_change_24h! > 0 ? "▲" : "▼"}
-                {Math.abs(
-                  (ticker?.quotes.USD.price! *
-                    ticker?.quotes.USD.percent_change_24h!) /
-                    100
-                ).toFixed(2)}{" "}
-                {ticker?.quotes.USD.percent_change_24h! > 0 ? "+" : null}
-                {ticker?.quotes.USD.percent_change_24h}%
-              </span>
-            </div>
-            <div>
-              <span className="label">Today High</span>
-              <span className="text">${today && today[0].high.toFixed(2)}</span>
-            </div>
-            <div>
-              <span className="label">Today Low</span>
-              <span className="text">${today && today[0].low.toFixed(2)}</span>
-            </div>
-          </SectionInfo>
+          <Info {...data} />
           <SectionContainer>
             <SectionColumn>
               <Tab>
-                <Link
-                  to="chart"
-                  style={{ fontWeight: onChart ? "bold" : "normal" }}
-                >
-                  <TabMenu title="Chart" />
+                <Link to="chart">
+                  <TabMenu title="Chart" isOn={onChart?.pattern.end ?? false} />
                 </Link>
-                <Link
-                  to="price"
-                  style={{ fontWeight: onPrice ? "bold" : "normal" }}
-                >
-                  <TabMenu title="Price" />
+                <Link to="price">
+                  <TabMenu title="Price" isOn={onPrice?.pattern.end ?? false} />
                 </Link>
               </Tab>
               <Outlet />
             </SectionColumn>
             <SectionColumn>
-              <Detail {...ticker} />
+              <Detail {...data} />
             </SectionColumn>
           </SectionContainer>
         </>

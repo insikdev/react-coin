@@ -1,17 +1,16 @@
 import ApexCharts from "react-apexcharts";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { fetchHistory } from "../api";
+import { fetchHistoryById } from "../api";
 import Loader from "../components/Loader";
 
 const Chart = () => {
   const { id } = useParams();
-  const { isLoading: historyLoading, data } = useQuery<IHistory[]>(
-    [id, "history"],
-    () => fetchHistory(id!)
+  const { isLoading, data } = useQuery<IHistory[]>([id, "history"], () =>
+    fetchHistoryById(id!)
   );
 
-  if (historyLoading) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <ApexCharts

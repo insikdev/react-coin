@@ -26,9 +26,9 @@ const Value = styled.div`
   color: gray;
 `;
 
-const Detail: React.FC<ITickerById> = (props) => (
+const Detail: React.FC<ITicker> = (props) => (
   <Container>
-    <TabMenu title="Detail" />
+    <TabMenu title="Detail" isOn={true} />
     <Row>
       <Label>Market Cap Rank</Label>
       <Value>{props.rank}</Value>
