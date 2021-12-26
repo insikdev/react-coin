@@ -56,10 +56,12 @@ const Price = () => {
                 </span>
               </div>
               <span style={{ width: "33%", textAlign: "center" }}>
-                {coin.close.toLocaleString("ko-KR", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {coin.close < 0.01
+                  ? coin.close.toPrecision(2)
+                  : coin.close.toLocaleString("ko-KR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
               </span>
               <span
                 style={{

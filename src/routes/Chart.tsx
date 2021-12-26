@@ -44,12 +44,7 @@ const Chart = () => {
         {
           data: data?.map((coin) => ({
             x: coin.time_open,
-            y: [
-              coin.open.toFixed(2),
-              coin.high.toFixed(2),
-              coin.low.toFixed(2),
-              coin.close.toFixed(2),
-            ],
+            y: [coin.open, coin.high, coin.low, coin.close],
           })),
         },
       ]}

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { convertToDollar } from "../utils";
 
 const Container = styled.section`
   background-color: ${(props) => props.theme.hoverColor};
@@ -42,22 +43,18 @@ const Info: React.FC<ITicker> = (props) => (
     </Column>
     <Column>
       <Label>Price</Label>
-      <Text>${props.quotes.USD.price.toFixed(2)}</Text>
+      <Text>{convertToDollar(props.quotes.USD.price)}</Text>
     </Column>
     <Column>
       <Label>24h Change</Label>
       <Change isUp={props.quotes.USD.percent_change_24h > 0}>
         {props.quotes.USD.percent_change_24h > 0 ? "▲" : "▼"}
-        {Math.abs(
-          (props.quotes.USD.price * props.quotes.USD.percent_change_24h) / 100
-        ).toFixed(2)}{" "}
-        {props.quotes.USD.percent_change_24h > 0 ? "+" : null}
-        {props.quotes.USD.percent_change_24h}%
+        {Math.abs(props.quotes.USD.percent_change_24h)}%
       </Change>
     </Column>
     <Column>
       <Label>ATH</Label>
-      <Text>${props.quotes.USD.ath_price.toFixed(2)}</Text>
+      <Text>{convertToDollar(props.quotes.USD.ath_price)}</Text>
     </Column>
   </Container>
 );

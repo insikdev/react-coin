@@ -49,7 +49,6 @@ const Button = styled.button`
 const Home = () => {
   const [page, setPage] = useState(1);
   const { isLoading, data } = useQuery<ITicker[]>("coins", fetchAllTickers);
-
   const nextPage = () => setPage((prev) => (prev === 1 ? 1 : prev - 1));
   const prevPage = () => setPage((prev) => (prev === 20 ? 20 : prev + 1));
 

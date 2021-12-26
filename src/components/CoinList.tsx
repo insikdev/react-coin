@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { convertToMillion } from "../utils";
+import { convertToDollar, convertToMillion } from "../utils";
 
 const CoinContainer = styled.li`
   border-bottom: 1px solid;
@@ -66,7 +66,7 @@ const CoinList: React.FC<ITicker> = (props) => (
         <CoinName>{props.name}</CoinName>
       </div>
       <div>
-        <span>${props.quotes.USD.price.toFixed(2)}</span>
+        <span>{convertToDollar(props.quotes.USD.price)}</span>
       </div>
       <div>
         <Change24 isUp={props.quotes.USD.percent_change_24h > 0}>

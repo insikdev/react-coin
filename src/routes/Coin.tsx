@@ -45,9 +45,7 @@ const Coin = () => {
       <Helmet>
         <title>{state?.name ?? data?.name ?? "Not Found"}</title>
       </Helmet>
-
       <MainTitle>{state?.name ?? data?.name ?? "Not Found"}</MainTitle>
-
       {isLoading || !data ? (
         <Loader />
       ) : (
