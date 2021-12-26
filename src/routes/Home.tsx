@@ -30,9 +30,28 @@ const Tab = styled.div`
   }
 `;
 
+const Pagination = styled.footer`
+  align-self: flex-end;
+  margin: 30px 0px;
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 10px;
+  font-size: 16px;
+  background-color: ${(props) => props.theme.hoverColor};
+`;
+
 const Home = () => {
   const [page, setPage] = useState(1);
   const { isLoading, data } = useQuery<ITicker[]>("coins", fetchAllTickers);
+
+  const nextPage = () => setPage((prev) => (prev === 1 ? 1 : prev - 1));
+  const prevPage = () => setPage((prev) => (prev === 20 ? 20 : prev + 1));
 
   return (
     <MainContainer>
@@ -56,14 +75,11 @@ const Home = () => {
           ))}
         </Ul>
       )}
-      <div>
-        {page > 1 ? (
-          <button onClick={() => setPage((prev) => prev - 1)}>prev</button>
-        ) : null}
-        {page < 100 ? (
-          <button onClick={() => setPage((prev) => prev + 1)}>next</button>
-        ) : null}
-      </div>
+      <Pagination>
+        <Button onClick={nextPage}>{"<< "}prev</Button>
+        <span>Page {page} of 20</span>
+        <Button onClick={prevPage}>next{" >>"}</Button>
+      </Pagination>
     </MainContainer>
   );
 };
