@@ -14,8 +14,13 @@ export const fetchHistory = async (id: string) => {
   ).then((res) => res.json());
 };
 
-export const fetchExchangeRate = () =>
-  fetch(`${BASE_URL}/tickers/usdt-tether?quotes=KRW`).then((res) => res.json());
-
 export const fetchToday = (id: string) =>
   fetch(`${BASE_URL}/coins/${id}/ohlcv/today`).then((res) => res.json());
+
+export const fetchCoinById = (id: string) =>
+  fetch(`${BASE_URL}/coins/${id}`).then((res) => res.json());
+
+/*
+export const fetchExchangeRate = () =>
+  fetch(`${BASE_URL}/tickers/usdt-tether?quotes=KRW`).then((res) => res.json());
+*/

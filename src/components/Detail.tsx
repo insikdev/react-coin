@@ -1,63 +1,59 @@
 import React from "react";
 import styled from "styled-components";
+import { convertToMillion } from "../utils";
+import TabMenu from "./TabMenu";
 
-interface IProps {
-  rank: number;
-  market_cap: number;
-  total_supply: number;
-  release_date: string;
-}
-
-const ItemContainer = styled.ul`
-  margin: 20px 0px;
+const Container = styled.ul`
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 100%;
 `;
 
-const ItemList = styled.li`
+const Row = styled.li`
   display: flex;
-  margin: 10px 0px;
+  width: 100%;
+  margin-bottom: 40px;
 `;
 
-const Label = styled.span`
-  width: 150px;
-  text-align: start;
+const Label = styled.div`
+  width: 50%;
+  font-size: 22px;
   font-weight: bold;
 `;
 
-const Detail: React.FC<IProps> = ({
-  rank,
-  market_cap,
-  total_supply,
-  release_date,
-}) => (
-  <ItemContainer>
-    <ItemList>
-      <Label>시가총액 순위</Label>
-      <span>{rank}</span>
-    </ItemList>
-    <ItemList>
-      <Label>시가총액</Label>
-      <span style={{ fontWeight: "bold" }}>
-        {Math.floor(market_cap / 1.0e12).toLocaleString("ko-KR")}
-        조원
-      </span>
-    </ItemList>
-    <ItemList>
-      <Label>최초 발행</Label>
-      <span style={{ fontWeight: "bold" }}>
-        {new Date(release_date).getFullYear()}년
-        {new Date(release_date).getMonth() + 1}월
-      </span>
-    </ItemList>
-    <ItemList>
-      <Label>현재 유통량</Label>
-      <span style={{ fontWeight: "bold" }}>
-        {Math.floor(total_supply).toLocaleString("ko-KR")}
-      </span>
-    </ItemList>
-  </ItemContainer>
+const Value = styled.div`
+  font-size: 20px;
+  color: gray;
+`;
+
+const Detail: React.FC<ITickerById> = (props) => (
+  <Container>
+    <TabMenu title="Detail" />
+    <Row>
+      <Label>Market Cap Rank</Label>
+      <Value>{props.rank}</Value>
+    </Row>
+    <Row>
+      <Label>Market Cap</Label>
+      <Value>{convertToMillion(props.quotes.USD.market_cap)}</Value>
+    </Row>
+    <Row>
+      <Label>Circulation Supply</Label>
+      <Value>{props.circulating_supply.toLocaleString("KR")}</Value>
+    </Row>
+    <Row>
+      <Label>Max Supply</Label>
+      <Value>{props.max_supply.toLocaleString("KR")}</Value>
+    </Row>
+    <Row>
+      <Label>Total Supply</Label>
+      <Value>{props.total_supply.toLocaleString("KR")}</Value>
+    </Row>
+    <Row>
+      <Label>Issue Date</Label>
+      <Value>{new Date(props.first_data_at).toLocaleString()}</Value>
+    </Row>
+  </Container>
 );
 
 export default Detail;

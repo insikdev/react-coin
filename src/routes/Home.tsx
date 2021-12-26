@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { fetchAllCoins, fetchExchangeRate } from "../api";
+import { fetchAllCoins } from "../api";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
@@ -79,8 +79,7 @@ const Change24 = styled.span<{ isUp: boolean }>`
 
 const Home = () => {
   const [page, setPage] = useState(1);
-  const { isLoading, data } = useQuery<ITickers[]>("coins", fetchAllCoins);
-  // const { data: exchange } = useQuery<IExchange>("exchange", fetchExchangeRate);
+  const { isLoading, data } = useQuery<ITickerById[]>("coins", fetchAllCoins);
 
   return (
     <MainContainer>

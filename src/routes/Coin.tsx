@@ -13,6 +13,7 @@ import Detail from "../components/Detail";
 import Loader from "../components/Loader";
 import MainContainer from "../components/MainContainer";
 import MainTitle from "../components/MainTitle";
+import TabMenu from "../components/TabMenu";
 
 const SectionInfo = styled.section`
   background-color: ${(props) => props.theme.hoverColor};
@@ -44,14 +45,6 @@ const SectionInfo = styled.section`
 const Tab = styled.nav`
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
-`;
-
-const TabChildren = styled(Link)`
-  background-color: ${(props) => props.theme.titleColor};
-  padding: 10px 60px;
-  border-radius: 10px;
-  color: white;
 `;
 
 const SectionContainer = styled.div`
@@ -69,8 +62,9 @@ const Coin = () => {
   const onChart = useMatch("/:id/chart");
   const onPrice = useMatch("/:id/price");
 
-  const { isLoading, data: ticker } = useQuery<ITicker>([id, "ticker"], () =>
-    fetchTicker(id!)
+  const { isLoading, data: ticker } = useQuery<ITickerById>(
+    [id, "ticker"],
+    () => fetchTicker(id!)
   );
   const { data: today } = useQuery<IToday[]>([id, "today"], () =>
     fetchToday(id!)
@@ -84,7 +78,7 @@ const Coin = () => {
       <header>
         <MainTitle>{state?.name ?? ticker?.name ?? "Not Found"}</MainTitle>
       </header>
-      {isLoading ? (
+      {isLoading || !ticker ? (
         <Loader />
       ) : (
         <>
@@ -129,28 +123,23 @@ const Coin = () => {
           <SectionContainer>
             <SectionColumn>
               <Tab>
-                <TabChildren
+                <Link
                   to="chart"
                   style={{ fontWeight: onChart ? "bold" : "normal" }}
                 >
-                  Chart
-                </TabChildren>
-                <TabChildren
+                  <TabMenu title="Chart" />
+                </Link>
+                <Link
                   to="price"
                   style={{ fontWeight: onPrice ? "bold" : "normal" }}
                 >
-                  Price
-                </TabChildren>
+                  <TabMenu title="Price" />
+                </Link>
               </Tab>
               <Outlet />
             </SectionColumn>
             <SectionColumn>
-              <Detail
-                rank={ticker?.rank!}
-                market_cap={ticker?.quotes.USD.market_cap!}
-                total_supply={ticker?.circulating_supply!}
-                release_date={ticker?.first_data_at!}
-              />
+              <Detail {...ticker} />
             </SectionColumn>
           </SectionContainer>
         </>
