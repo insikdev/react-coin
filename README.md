@@ -2,7 +2,7 @@
 
 ## Overview
 
-- [링크](https://zzicc12.github.io/react-coin/)
+- [링크](https://insikdev.github.io/react-coin/)
 - Coinpaprika API 사용
 - 검색 기능 추가 예정
 
